@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block content %}
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 1,3rd Question</h4>
+          <h1 id="question-1">Develop a Django app that displays current date and time in server</h1>
+        <hr>
+        <p class="mb-0"></p>
+      </div>
+
+<div class="container-fluid">
+    <div class="row">
+      <!-- Main Content -->
+      <div class="col-md-8">
+        <section id="section1">
+            <h2 id="start-django-app">Start Django-app</h2>
+                <ul>
+                    <li>Create a new django project <code>django-admin startproject timedate</code>.</li>
+                    <li>change into that directory <code>cd timedate</code>.</li>
+                    <li>Check if everything is working properly by running local server and seeing the output <code>python manage.py runserver</code>.</li>
+                </ul>
+        </section>
+        <section id="section2">
+            <h2 id="edit-urlspy-file">Edit urls.py file</h2>
+<ul>
+  <li>Set URL patterns to display the date and time.</li>
+</ul>
+<pre><code>
+from django.contrib import admin
+from django.urls import path
+from . import views
+
+urlpatterns = [
+path(&#39;admin/&#39;, admin.site.urls),
+path(&quot;datetime/&quot;,views.datetimee,name=&quot;datetime&quot;),
+]
+</code></pre>
+        </section>
+        <section id="section3">
+            <h2 id="create-viewspy-and-edit-it">Create views.py and Edit it</h2>
+<ul>
+  <li>views.py should be created here <code>timedate/timedate/view.py</code>, and add the below contents to it.</li>
+</ul>
+<pre><code>
+from django.shortcuts import HttpResponse
+from datetime import datetime
+
+def datetimee(request):
+    now = datetime.now()
+    return HttpResponse(f"current datetime is {now}") 
+</code></pre>
+
+        </section>
+        <section id="section4">
+            <h2 id="see-the-output">See the OUTPUT</h2>
+<ul>
+  <li>After saving the written program files run the local server with <code>python manage.py runserver</code> command and follow the localhost link.</li>
+  <li>redirect local host url to this pattern <code>http://localhost:8001/datetime/</code>, if you are running local host on port 8000</li>
+  <li>the current datetime should be printed as output.</li>
+</ul>
+        </section>
+      </div>
+      <!-- Table of Contents -->
+      <div class="col-md-4">
+        <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+          <nav class="nav nav-pills flex-column">
+            <h2>Contents</h2>
+            <a class="nav-link" href="#section1">Start Django-app</a>
+            <a class="nav-link" href="#section2">Edit urls.py file</a>
+            <a class="nav-link" href="#section3">Create views.py and Edit it</a>
+          </nav>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+
+<h2> Watch a quich video summary on how to run this program</h2>
+<h3> Watch it at 2x speed</h3>
+<video width="900px"  controls>
+  <source src="/static/time_date.mp4/" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+{% endblock content %}

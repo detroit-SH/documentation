@@ -1,0 +1,197 @@
+
+
+{% extends "layout.html" %}
+{% block content %}
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 5,1st Question</h4>
+          <h1 id="question-8">Develop a registration page for student enrolment as done in Module 2 but without page refresh using AJAX.</h1>
+        <hr>
+        <p class="mb-0"></p>
+      </div>
+
+<div class="container-fluid">
+    <div class="row">
+      <!-- Main Content -->
+      <div class="col-md-8">
+        <section id="section1">
+         <h2 id="ajax-is-a-developers-dream-because-you-can">AJAX is a developer&#39;s dream, because you can:</h2>
+<ul>
+<li>Update a web page without reloading the page</li>
+<li>AJAX = <strong>A</strong>synchronous <strong>J</strong>avaScript <strong>A</strong>nd <strong>X</strong>ML.</li>
+<li>AJAX is not a programming language.</li>
+<li>AJAX just uses a combination of:<ul>
+<li>A browser built-in XMLHttpRequest object (to request data from a web server)</li>
+<li><strong>JavaScript</strong> and HTML <strong>DOM</strong> (to display or use the data)</li>
+</ul>
+</li>
+</ul>
+        </section>
+        <section id="section2">
+        <h2 id="rerunning-the-student-registration-program">Rerunning the Student Registration program.</h2>
+<ul>
+<li>We are going to <strong>rerun the Student Registration</strong> program and compare it&#39;s output after implementing AJAX to it.</li>
+<li>Go to program list and select Student Registration program in this webpage and follow the instructions and execute it.</li>
+<li>Follow the instructions and get the program running. Or you can <a href="https://downgit.evecalm.com/#/home?url=https://github.com/Shashank-V-H/django_lab_projects/tree/main/models_demo">Download project</a>and alter it.</li>
+<li>Defaul Username and password is "user"</li>
+</ul>
+        </section>
+        <section id="section3">
+        <h2 id="notice-the-difference">Notice the difference</h2>
+<ul>
+<li>After updating some course in the admin panel, come back to registration page.</li>
+<li>Try to add new students to the course. <strong>Notice anything ?</strong>, yeah each time we register new student page get&#39;s reloaded to update the data in database.</li>
+<li>We are going to do this registration without reloading the page using <strong>AJAX</strong>.</li>
+</ul>
+        </section>
+        <section id="section4">
+        <h2 id="make-the-changes-in-viewspy-and-registerhtml-file">Make the changes in <code>register.html</code> and <code>views.py</code> file.</h2>
+<ul>
+<li>Update <code>register.html</code></li>
+</ul>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;head&gt;
+    &lt;title&gt;Register Student to Course&lt;/title&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Register Student&lt;/h2&gt;
+    &lt;form id=&quot;registrationForm&quot; method=&quot;post&quot; action=&quot;&#123;% url &#39;register&#39; %&#125;&quot;&gt;
+        &#123;% csrf_token %&#125;
+        &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;name&quot; name=&quot;name&quot; maxlength=&quot;50&quot; required&gt;
+        &lt;br&gt;
+        &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt;
+        &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;br&gt;
+        &lt;label for=&quot;course&quot;&gt;Select Course:&lt;/label&gt;
+        &lt;select id=&quot;course&quot; name=&quot;course&quot; required&gt;
+            &#123;% for course in courses %&#125;
+                &lt;option value=&quot;&#123;&#123; course.id &#125;&#125;&quot;&gt;&#123;&#123; course.title &#125;&#125;&lt;/option&gt;
+            &#123;% endfor %}
+        &lt;/select&gt;
+        &lt;br&gt;
+        &lt;button type=&quot;submit&quot;&gt;Register&lt;/button&gt;
+    &lt;/form&gt;
+    &lt;div id=&quot;message&quot;&gt;&lt;/div&gt;
+
+    &lt;!-- Let the students view who all opted for particular course by selecting the course --&gt;
+    &lt;form id=&quot;redirectForm&quot; method=&quot;get&quot; onsubmit=&quot;redirectToRegisteredStudents(event)&quot;&gt;
+        &lt;label for=&quot;course_title&quot;&gt;Enter Course Title:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;course_title&quot; name=&quot;course_title&quot; required&gt;
+        &lt;button type=&quot;submit&quot;&gt;Go&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;script&gt;
+        function redirectToRegisteredStudents(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var courseTitle = document.getElementById(&#39;course_title&#39;).value;
+            if (courseTitle) {
+                // Encode the course title to be URL safe
+                var encodedCourseTitle = encodeURIComponent(courseTitle);
+                // Redirect to the desired URL
+                window.location.href = &#39;/registered/&#39; + encodedCourseTitle + &#39;/&#39;;
+            }
+        }
+
+        $(document).ready(function(){
+            $(&#39;#registrationForm&#39;).on(&#39;submit&#39;, function(event){
+                event.preventDefault();
+                $.ajax({
+                    type: &#39;POST&#39;,
+                    url: &#39;&#123;% url &quot;register&quot; %&#125;&#39;,
+                    data: {
+                        name: $(&#39;#name&#39;).val(),
+                        email: $(&#39;#email&#39;).val(),
+                        course: $(&#39;#course&#39;).val(),
+                        csrfmiddlewaretoken: &#39;&#123;&#123; csrf_token &#125;&#125;&#39;
+                    },
+                    success: function(response){
+                        $(&#39;#message&#39;).html(&#39;&lt;p&gt;&#39; + response.message + &#39;&lt;/p&gt;&#39;);
+                        $(&#39;#registrationForm&#39;)[0].reset();
+                    },
+                    error: function(response){
+                        $(&#39;#message&#39;).html(&#39;&lt;p&gt;An error occurred&lt;/p&gt;&#39;);
+                    }
+                });
+            });
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ul>
+<li>Update <code>view.py</code> file.</li>
+</ul>
+<pre><code class="language-python">from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.contrib import messages
+from django.http import JsonResponse
+from .models import Student, Course
+
+def test(request):
+    return HttpResponse(&quot;this is a test&quot;)
+
+def register(request):
+    if request.method == &#39;POST&#39;:
+        student_name = request.POST[&#39;name&#39;]
+        student_email = request.POST[&#39;email&#39;]
+        course_id = request.POST[&#39;course&#39;]
+        course = Course.objects.get(pk=course_id)
+        student, created = Student.objects.get_or_create(name=student_name, email=student_email)
+        course.students.add(student)
+        return JsonResponse({&#39;message&#39;: &#39;Student successfully added to the course.&#39;})
+    else:
+        courses = Course.objects.all()
+        return render(request, &#39;register.html&#39;, {&#39;courses&#39;: courses})
+
+def registered(request, course_title):
+    course = get_object_or_404(Course, title=course_title)
+    students = course.students.all()
+    return render(request, &#39;registered.html&#39;, {&#39;course&#39;: course, &#39;students&#39;: students})
+</code></pre>
+        </section>
+        <section id="section5">
+          <h2 id="now-youll-see-the-difference">Now you&#39;ll see the Difference</h2>
+<ul>
+<li>Save the changes rerun the local server and now try to register. <strong>No need of making migrations</strong>, cause we didn&#39;t touched the database.</li>
+<li>Run the local server and go to this url <code>http://localhost:8000/register/</code></li>
+<li>Now try to register. Noticed the difference? The page will not load when we try register, like it used to do without AJAX.</li>
+<li>If you see in your local server running terminal you'll see "HTTP POST parameters that are sent to your view without loading the page"</li>
+</ul>
+
+        </section>
+      <section id="section6">
+        <h2 id="make-migrations-and-create-superuser">Resourses</h2>
+        <ul>
+          <li><a href="https://www.w3schools.com/xml/ajax_intro.asp"></a>w3schools</li>
+          <li><a href="https://api.jquery.com/Jquery.ajax/"></a> jQuery.ajax() | jQuery API Documentation </li>
+        </ul>
+
+      </section>
+
+      </div>
+      <!-- Table of Contents -->
+      <div class="col-md-4">
+        <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+          <nav class="nav nav-pills flex-column">
+            <h2>Contents</h2>
+            <a class="nav-link" href="#section1">AJAX is a developer&#39;s dream, because you can:</a>
+            <a class="nav-link" href="#section2">Rerunning the Student Registration program.</a>
+            <a class="nav-link" href="#section3">Notice the difference</a>
+            <a class="nav-link" href="#section4">Make the changes in <code>register.html</code> and <code>views.py</code> file.</a>
+            <a class="nav-link" href="#section5">Now you&#39;ll see the Difference</a>
+            <a class="nav-link" href="#section6"Resourses></a>
+          </nav>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+<h2> Watch a quich video summary on how to run this program</h2>
+<h3> Watch it at 2x speed</h3>
+<video width="900px"  controls>
+  <source src="/static/AJAX_registration.mp4/" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+{% endblock content %}

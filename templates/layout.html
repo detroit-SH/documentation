@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+    <title>Django Lab programs</title>
+    <link rel="icon" href="/static/sh2.ico" type="image/x-icon">
+
+    <style>
+    /* Custom styles for the footer */
+    body{
+    background-color: black;
+    color: white;
+    Font: Oswald;
+    font-size: 16px;
+    text-align: left;
+    }
+    .white-mode{
+    background-color: white;
+    color: black;
+    }
+    h1{
+    font-size: 32px;
+        font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
+        font-weight: 400;
+    }
+    h2{
+    {% comment %} font-size: 2em; {% endcomment %}
+    color: #4CC9F0;
+    font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
+        font-weight: 400;
+    }
+    footer {
+    position: bottom;
+    bottom: 0;
+    width: 100%;
+    background-color: black;
+    }
+
+    code {
+    font-family: "Fira Mono", Consolas, Menlo, Monaco, "Courier New", Courier, monospace;
+        font-variant-ligatures: no-common-ligatures;
+        text-rendering: optimizeSpeed;
+        overflow-wrap: break-word;
+        color: #4CC9F0;;
+        font-size: 1em;
+    }
+
+    button{
+    background-color: black;
+    color: white;
+    }
+
+    .nav-link {
+    color: #4CC9F0;
+    }
+
+    /* Link color on hover */
+    .nav-link:hover {
+    color: red;
+    }
+
+    /* Active link color */
+    .nav-link.active {
+    color: #4CC9F0!important;
+    font-weight: bold;
+    }
+
+    .alert-custom {
+    background-color: #000000; /* Dark background */
+    border: 2px solid #87CEEB; /* Sky blue border */
+    color: white; /* White text color */
+    }
+    .alert-custom h4 {
+    color: #87CEEB; /* Sky blue heading color */
+    }
+
+    video {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    }
+    </style>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/outrun-dark.min.css">  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/silk-dark.css"> 
+
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/me/">Shashank V H</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/home/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/ack/">acknowledgment</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Programs list 
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color:skyblue;">
+                <li><a class="dropdown-item" href="/code1/">Print current datetime</a></li>
+                <li><a class="dropdown-item" href="/code2/">Offset of date and time</a></li>
+                <li><a class="dropdown-item" href="/code3/">Ordered and unorder list</a></li>
+                <li><a class="dropdown-item" href="/code4/">Template Inheritance</a></li>
+                <li><a class="dropdown-item" href="/code5/">Student Registration</a></li>
+                <li><a class="dropdown-item" href="/code6/">Project_Registration</a></li>
+                <li><a class="dropdown-item" href="/code7&8/">Generic Class view</a></li>
+                <li><a class="dropdown-item" href="/code7&8/">Pdf and csv generation</a></li>
+                <li><a class="dropdown-item" href="/code9/">Registration using AJAX</a></li>
+                <li><a class="dropdown-item" href="/code10/">Search using AJAX</a></li>
+                <!-- <li><hr class="dropdown-divider"></li> -->
+                <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+              </ul>
+            </li>
+            <!-- <li class="nav-item"> -->
+            <!--   <a class="nav-link " href="/test/" tabindex="-1" aria-disabled="true">Disabled</a> -->
+            <!-- </li> -->
+          </ul>
+          {% comment %} <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form> {% endcomment %}
+          <button onclick="myFunction()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
+            <path d="M11 4a4 4 0 0 1 0 8H8a5 5 0 0 0 2-4 5 5 0 0 0-2-4zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8M0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5"/>
+          </svg></button>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+
+
+    {% block content %}
+
+    {% endblock content %}
+
+
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start">
+      <div class="container d-flex justify-content-center py-2">
+        <a
+          class="btn btn-link btn-floating btn-lg text-light m-1"
+          href="https://www.linkedin.com/in/shashank-v-h-a13538229/"
+          role="button"
+          data-mdb-ripple-color="dark"
+        ><i class="fab fa-linkedin"></i
+          ></a>
+        <a
+          class="btn btn-link btn-floating btn-lg text-light m-1"
+          href="https://github.com/Shashank-V-H/django_lab_projects.git"
+          role="button"
+          data-mdb-ripple-color="dark"
+        ><i class="fab fa-github"></i
+          ></a>
+      </div>
+
+      <!-- Copyright -->
+      <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        <!-- © 2024 Copyright:<a href="https://github.com/Sha-V-H"> Shashank-v-h.com</a> -->
+        © 2024 Copyright: <b>Shashank V H</b></a>
+
+
+        <!-- End Footer -->
+
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+
+        <!-- highlight.js for highlighting the code -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" > </script>
+        <script>
+        hljs.highlightAll();
+        </script>
+        <!-- highlight.js for highlighting the code -->
+        <script>
+        function myFunction() {
+          var element = document.body;
+          element.classList.toggle("white-mode");
+        }
+        </script>
+
+
+
+
+
+  </body>
+</html>
+

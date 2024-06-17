@@ -1,0 +1,161 @@
+{% extends "layout.html" %}
+{% block content %}
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 2, 2nd Question</h4>
+              <h1 id="question-1">Develop a layout.html with a suitable header (containing navigation menu) and footer with copyright and developer information. Inherit this layout.html and create 3 additional pages: contact us, About Us and Home page of any website.</h1>
+        <hr>
+        <p class="mb-0"></p>
+      </div>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Main Content -->
+    <div class="col-md-8">
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Note <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-text" viewBox="0 0 16 16">
+          <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+          <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8m0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+        </svg></h4>
+      <p >Make sure to execute the previous program for printing the ordered and unordered list</p>
+        <hr>
+      </div>
+
+      <section id="section1">
+        <h2 id="writing-all-the-required-html-files-in-the-templates-folder">Writing all the required html files in the templates folder</h2>
+        <ul>
+          <li>As we already created a templates folder in the previous program, let&#39;s add these html files to it which uses inheritance concept.</li>
+          <li>Create a <code>layout.html</code> file and add below code to it.</li>
+        </ul>
+        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;template-inheritance&lt;/title&gt;
+        &lt;style&gt;
+            li {
+                display: inline; &lt;!--to display the navbar horizontally--&gt;
+            } 
+            footer{
+                text-align: center;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;header&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a href=&quot;/home/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;/contact/&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;/about/&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+        &lt;/header&gt;
+            &lt;hr&gt;  &lt;!-- for horizontal line--&gt;
+        &lt;main&gt;
+            &#123;% block content %&#125;
+            &#123;% endblock content%&#125;
+        &lt;/main&gt;
+            &lt;hr&gt; 
+        &lt;footer&gt;&amp;copy; 2024 Copyright: All rights reserved. your_domain_name.com.  &lt;/footer&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
+        <ul>
+          <li>create a <code>home.html</code> file and add the below contents.</li>
+        </ul>
+        <pre><code>
+&#123;% extends &quot;layout.html&quot; %&#125;
+
+&#123;% block title %&#125;Home&#123;% endblock %&#125;
+
+&#123;% block content %&#125;
+    &lt;h1&gt;Home page&lt;/h1&gt;
+    &lt;p&gt;&#123;% lorem 1 %&#125;&lt;/p&gt;
+&#123;% endblock content%&#125;
+        </code></pre>
+        <ul>
+          <li>create <code>about.html</code> file and below contents.</li>
+        </ul>
+        <pre><code >
+&#123;% extends &quot;layout.html&quot; %&#125;
+
+&#123;% block title %&#125;about&#123;% endblock %&#125;
+
+&#123;% block content %&#125;
+    &lt;h1&gt;About page&lt;/h1&gt;
+    &lt;p&gt;&#123;% lorem 1 %&#125;&lt;/p&gt;
+&#123;% endblock content%&#125;
+        </code></pre>
+        <ul>
+          <li>create <code>contact.html</code> file and add below contents.</li>
+        </ul>
+        <pre><code>
+&#123;% extends &quot;layout.html&quot; %&#125;
+
+&#123;% block title %&#125;contact&#123;% endblock %&#125;
+
+&#123;% block content %&#125;
+    &lt;h1&gt;Contact page&lt;/h1&gt;
+    &lt;p&gt;&#123;% lorem 1 %&#125;&lt;/p&gt;
+&#123;% endblock content%&#125;
+        </code></pre>
+      </section>
+      <section id="section2">
+        <h2 id="writing-viewpy-file-to-render-the-above-html-file-and-setting-urls">Writing view.py file to render the above html file and setting urls.</h2>
+        <ul>
+          <li>make changes in <code>urls.py</code> file as show below.</li>
+        </ul>
+        <pre><code class="language-python">
+from django.contrib import admin
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path(&#39;&#39;, views.home,name=&quot;home&quot;),
+    path(&#39;home/&#39;,views.home,name=&quot;home&quot;),
+    path(&#39;contact/&#39;,views.contact,name=&quot;contact&quot;),
+    path(&#39;about/&#39;,views.about,name=&quot;about&quot;),
+]
+        </code></pre>
+        <ul>
+          <li>make these changes in <code>view.py</code></li>
+        </ul>
+        <pre><code class="language-python">
+from django.shortcuts import HttpResponse,render
+from datetime import datetime,timedelta
+
+def home(request):
+    return render(request,&quot;home.html&quot;) 
+
+def contact(request):
+    return render(request,&quot;contact.html&quot;) 
+
+def about(request):
+    return render(request,&quot;about.html&quot;) 
+        </code></pre>
+        <ul>
+          <li>Run local server <code>python manage.py runserver</code> and redirect url&#39;s as specified in the urls.py file and see the output.</li>
+        </ul>
+      </section>
+    </div>
+    <!-- Table of Contents -->
+    <div class="col-md-4">
+      <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+        <nav class="nav nav-pills flex-column">
+          <h2>Contents</h2>
+          <a class="nav-link" href="#section1">Writing all the required html files in the templates folder</a>
+          <a class="nav-link" href="#section2">Writing view.py file to render the above html file and setting urls.</a>
+    </div>
+  </div>
+
+<h2> Watch a quich video summary on how to run this program</h2>
+<h3> Watch it at 2x speed</h3>
+<video width="1000" height="500" controls>
+  <source src="/static/template_inheritance.mp4/" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
+
+
+  {% endblock content %}

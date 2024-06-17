@@ -1,0 +1,232 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 3, 2nd Question</h4>
+      <h1 id="question-6">Develop a Model form for student that contains his topic chosen for project, languages used and duration with a model called project.</h1>
+        <hr>
+      </div>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-md-8">
+      <section id="section1">
+        <h2 id="create-project-and-app-register-app-in-settingspy">create project and app, register app in settings.py</h2>
+        <ul>
+          <li><code>django-admin startproject forms_demo</code></li>
+          <li><code>cd forms_demo</code></li>
+          <li><code>code .</code></li>
+          <li><code>python3 manage.py startapp forms_app</code></li>
+          <li>register this app in <code>settings.py</code>.</li>
+        </ul>
+        <pre><code class="language-language">INSTALLED_APPS = [
+    # Rest of the apps.....
+    &#39;forms_app&#39;, # &lt;----- your app.
+]
+        </code></pre>
+      </section>
+      <section id="section2">
+        <h2 id="write-urlspy-file">write urls.py file</h2>
+        <ul>
+          <li>Write the below contents in <code>urls.py</code></li>
+          <li>In <code>forms_demo/urls.py</code></li>
+        </ul>
+        <pre><code class="language-python">from django.contrib import admin
+from django.urls import path,include
+
+urlpatterns = [
+    path(&#39;admin/&#39;, admin.site.urls),
+    path(&quot;&quot;,include(&quot;forms_app.urls&quot;)),
+]
+        </code></pre>
+      </section>
+      <section id="section3">
+        <h2 id="write-modelspy-file">write models.py file</h2>
+        <img src="/static/project_form_RE.png" style="border-radius: 8px; width: 800px; height: 450px;"></img>
+        <ul>
+          <li>Write the below contents in <code>models.py</code> file.</li>
+          <li><code>forms_app/models.py</code></li>
+        </ul>
+        <pre><code class="language-python">
+from django.db import models
+
+# Create your models here.
+
+# Existing Student model
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    # email = models.EmailField(unique=False)
+
+    def __str__(self):
+        return self.name
+
+# New Project model
+class Project(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name=&#39;projects&#39;)
+    topic = models.CharField(max_length=200)
+    languages = models.CharField(max_length=200)
+    duration = models.PositiveIntegerField(help_text=&#39;Duration in months&#39;)
+
+    def __str__(self):
+        return f&#39;{self.topic} by {self.student.name}&#39;
+        </code></pre>
+      </section>
+      <section id="section4">
+        <h2 id="register-models-in-adminpy">register models in admin.py</h2>
+        <ul>
+          <li>Write the below contents in <code>admin.py</code> file to register the models.</li>
+        </ul>
+        <pre><code class="language-python">
+from django.contrib import admin
+from .models import Student,Project
+
+# Register your models here.
+admin.site.register(Student)
+admin.site.register(Project)
+        </code></pre>
+      </section>
+      <section id="section5">
+        <h2 id="write-formspy-file">Write forms.py file</h2>
+        <ul>
+          <li>Write below contents in <code>forms_app/forms.py</code> file.</li>
+        </ul>
+        <pre><code class="language-python">
+from django import forms
+from .models import Project, Student
+
+class ProjectForm(forms.ModelForm):
+      student_name = forms.CharField(max_length=50, required=True, label='Student Name')
+
+      class Meta:
+            model = Project
+            fields = ['student_name', 'topic', 'languages', 'duration']
+
+      def save(self, commit=True):
+            student_name = self.cleaned_data['student_name']
+            student, created = Student.objects.get_or_create(name=student_name)
+            self.instance.student = student
+            return super().save(commit=commit)
+        </code></pre>
+      </section>
+      <section id="section6">
+        <h2 id="write-viewspy-file">Write views.py file</h2>
+        <ul>
+          <li>Write the below contents in <code>forms_app/views.py</code> file.</li>
+        </ul>
+        <pre><code class="language-python">
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Project
+from .forms import ProjectForm
+
+def register_project(request):
+    if request.method == &#39;POST&#39;:
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # return redirect(&#39;project_success&#39;)  # Redirect to a success page or another view
+            messages.success(request, &#39;Student successfully added to the course.&#39;)
+            return redirect(&#39;register_project&#39;)
+    else:
+        form = ProjectForm()
+    return render(request, &#39;project_form.html&#39;, {&#39;form&#39;: form})
+
+def project_success(request):
+    return render(request, &#39;project_success.html&#39;)
+        </code></pre>
+      </section>
+      <section id="section7">
+        <h2 id="write-urlspy-file-to-link-the-views">Write urls.py file to link the views</h2>
+        <pre><code class="language-python">
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path(&#39;register_project/&#39;, views.register_project, name=&#39;register_project&#39;),
+]
+        </code></pre>
+      </section>
+      <section id="section8">
+        <h2 id="write-templates">Write templates</h2>
+        <ul>
+          <li>Create a templates folder in the project folder not in any apps.</li>
+          <li>Register the folder in the templates section of settings.py file by adding this line in the list <code>&#39;DIRS&#39;: [    BASE_DIR / &quot;templates&quot;  ],</code> </li>
+          <li>add <code>project_form.html</code> file in templates directory and write the below contents.</li>
+        </ul>
+        <pre><code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Project Registration&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Register Project&lt;/h2&gt;
+    &lt;form method=&quot;post&quot; action=&quot;&#123;% url &#39;register_project&#39; %&#125;&quot;&gt;
+        &#123;% csrf_token %&#125;
+        &#123;&#123; form.as_p &#125;&#125;
+        &lt;button type=&quot;submit&quot;&gt;Register Project&lt;/button&gt;
+    &lt;/form&gt;
+    &#123;% if messages %&#125;
+    &lt;ul class=&quot;messages&quot;&gt;
+        &#123;% for message in messages %&#125;
+             &lt;li&#123;% if message.tags %&#125; class=&quot;&#123;&#123; message.tags &#125;&#125;&quot;&#123;% endif %&#125;&gt;&#123;&#123; message &#125;&#125;&lt;/li&gt;
+        &#123;% endfor %&#125;
+    &lt;/ul&gt;
+    &#123;% endif %&#125;
+&lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
+
+      </section>
+      <section id="section9">
+        <h2 id="make-migrations-and-create-superuser">make migrations and create superuser</h2>
+        <ul>
+          <li>In terminal make migrations and migrate the database before creating superuser.</li>
+          <li>enter <code>python3 manage.py makemigrations</code>, after the enter <code>python3 manage.py migrate</code></li>
+          <li>Now crate a superuser with command <code>python3 manage.py createsuperuser</code>, Enter the required credentials and create super user.</li>
+          <li>Now run the local server and go to this url pattern <code>http://127.0.0.1:8000/register_project/</code></li>
+          <li>Now you would be able to register the students and see the registered students data in admin panel by logging in as a super user.</li>
+        </ul>
+
+      </section>
+      <section id="section10">
+        <h2 id="make-migrations-and-create-superuser">Resourses</h2>
+        <ul>
+          <li><a href="https://docs.djangoproject.com/en/5.0/topics/db/models/">Django Models</a></li>
+          <li><a href="https://docs.djangoproject.com/en/5.0/ref/contrib/messages/">Djanog Messages</a></li>
+        </ul>
+
+      </section>
+    </div>
+    <!-- Table of Contents -->
+    <div class="col-md-4">
+      <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+        <nav class="nav nav-pills flex-column">
+          <h2>Contents</h2>
+          <a class="nav-link" href="#section1">create project and app, register app in <code>settings.py</code></a>
+          <a class="nav-link" href="#section2">write <code>urls.py</code> file </a>
+          <a class="nav-link" href="#section3">write <code>models.py</code> file</a>
+          <a class="nav-link" href="#section4">register models in <code>admin.py</code> </a>
+          <a class="nav-link" href="#section5">Write <code>forms.py</code> file</a>
+          <a class="nav-link" href="#section6">Write <code>views.py</code> file </a>
+          <a class="nav-link" href="#section7">Write <code>urls.py</code> file to link the views</a>
+          <a class="nav-link" href="#section8">Write templates</a>
+          <a class="nav-link" href="#section9">make migrations and create superuser</a>
+          <a class="nav-link" href="#section10">Resourses</a>
+        </nav>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+<h2> Watch a quich video summary on how to run this program</h2>
+<h3> Watch it at 2x speed</h3>
+<video width="1000" height="500" controls>
+  <source src="/static/forms.mp4/" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+{% endblock content %}

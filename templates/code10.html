@@ -1,0 +1,229 @@
+
+{% extends "layout.html" %}
+{% block content %}
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 5,2nd Question</h4>
+          <h1 id="question-8">Develop a search application in Django using AJAX that displays courses enrolled by a student being searched.</h1>
+        <hr>
+        <p class="mb-0"></p>
+      </div>
+
+<div class="container-fluid">
+    <div class="row">
+      <!-- Main Content -->
+
+      <div class="col-md-8">
+        <section id="section1">
+<ul>
+<li>Again we need the Student registration project from module 2.</li>
+<li>If you want to create it again and alter it for this program follow the instructions in the programs lists student list of this website.</li>
+<li>Or you can directly download that <a href="https://downgit.github.io/#/home?url=https://github.com/Shashank-V-H/django_lab_projects/tree/main/models_demo">project</a> and make changes in it.</li>
+<li>Alter the below files in this project.</li>
+</ul>
+        </section>
+        <section id="section2">
+          <h2 id="urlspy"><code>urls.py</code></h2>
+<pre><code class="language-python">from django.urls import path, include
+from . import views
+
+urlpatterns = [
+    path(&#39;test/&#39;, views.test, name=&quot;test&quot;),
+    path(&#39;register/&#39;, views.register, name=&quot;register&quot;),
+    path(&#39;registered/&lt;str:course_title&gt;/&#39;, views.registered, name=&#39;registered&#39;),
+    path(&#39;search_student_courses/&#39;, views.search_student_courses, name=&#39;search_student_courses&#39;),
+]
+</code></pre>
+        </section>
+        <section id="section3">
+          <h2 id="viewpy"><code>views.py</code></h2>
+<pre><code class="language-python">
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.contrib import messages
+from django.http import JsonResponse
+from .models import Student, Course
+
+# Create your views here.
+def test(request):
+    return HttpResponse("this is a test")
+
+def register(request):
+    if request.method == 'POST':
+        student_name = request.POST['name']
+        student_email = request.POST['email']
+        course_id = request.POST['course']
+        course = Course.objects.get(pk=course_id)
+        student, created = Student.objects.get_or_create(name=student_name, email=student_email)
+        course.students.add(student)
+        return JsonResponse({'message': 'Student successfully added to the course.'})
+    else:
+        courses = Course.objects.all()
+        return render(request, 'register.html', {'courses': courses})
+
+def registered(request, course_title):
+    course = get_object_or_404(Course, title=course_title)
+    students = course.students.all()
+    return render(request, 'registered.html', {'course': course, 'students': students})
+
+def search_student_courses(request):
+    if request.method == 'POST':
+        student_name = request.POST['student_name_search']
+        student = get_object_or_404(Student, name=student_name)
+        courses = student.courses.values_list('title', flat=True)
+        return JsonResponse({'courses': list(courses)})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+    </code></pre>
+        </section>
+        <section id="section4">
+          <h2 id="registerhtml"><code>register.html</code></h2>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;head&gt;
+    &lt;title&gt;Register Student to Course&lt;/title&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.6.0.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Register Student&lt;/h2&gt;
+    &lt;form id=&quot;registerForm&quot;&gt;
+        &#123;% csrf_token %&#125;
+        &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;name&quot; name=&quot;name&quot; maxlength=&quot;50&quot; required&gt;
+        &lt;br&gt;
+        &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt;
+        &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;br&gt;
+        &lt;label for=&quot;course&quot;&gt;Select Course:&lt;/label&gt;
+        &lt;select id=&quot;course&quot; name=&quot;course&quot; required&gt;
+            &#123;% for course in courses %&#125;
+                &lt;option value=&quot;&#123;&#123; course.id &#125;&#125;&quot;&gt;&#123;&#123; course.title &#125;&#125;&lt;/option&gt;
+            &#123;% endfor %&#125;
+        &lt;/select&gt;
+        &lt;br&gt;
+        &lt;button type=&quot;submit&quot;&gt;Register&lt;/button&gt;
+    &lt;/form&gt;
+    &lt;div id=&quot;registerResult&quot;&gt;&lt;/div&gt;
+
+
+ &lt;!-- Let the students view who all opted for particular course by selecting the course --&gt;
+
+    &lt;form id=&quot;redirectForm&quot; method=&quot;get&quot; onsubmit=&quot;redirectToRegisteredStudents(event)&quot;&gt;
+        &lt;label for=&quot;course_title&quot;&gt;Enter Course Title:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;course_title&quot; name=&quot;course_title&quot; required&gt;
+        &lt;button type=&quot;submit&quot;&gt;Go&lt;/button&gt;
+    &lt;/form&gt;
+    
+    &lt;!-- Search for a student to view their courses --&gt;
+    &lt;h2&gt;Search Student&#39;s Enrolled Courses&lt;/h2&gt;
+    &lt;form id=&quot;searchForm&quot;&gt;
+        &#123;% csrf_token %&#125;
+        &lt;label for=&quot;student_name_search&quot;&gt;Enter Student Name:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;student_name_search&quot; name=&quot;student_name_search&quot; required&gt;
+        &lt;button type=&quot;submit&quot;&gt;Search&lt;/button&gt;
+    &lt;/form&gt;
+    &lt;div id=&quot;searchResult&quot;&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        // AJAX for registration
+        $(&#39;#registerForm&#39;).submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: &quot;&#123;% url &#39;register&#39; %&#125;&quot;,
+                type: &#39;POST&#39;,
+                data: $(this).serialize(),
+                success: function(response) {
+                    $(&#39;#registerResult&#39;).html(&#39;&lt;p&gt;&#39; + response.message + &#39;&lt;/p&gt;&#39;);
+                },
+                error: function(xhr) {
+                    $(&#39;#registerResult&#39;).html(&#39;&lt;p&gt;An error occurred.&lt;/p&gt;&#39;);
+                }
+            });
+        });
+
+        // AJAX for searching student&#39;s enrolled courses
+        $(&#39;#searchForm&#39;).submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: &quot;&#123;% url &#39;search_student_courses&#39; %&#125;&quot;,
+                type: &#39;POST&#39;,
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.courses.length &gt; 0) {
+                        var coursesList = &#39;&lt;ul&gt;&#39;;
+                        for (var i = 0; i &lt; response.courses.length; i++) {
+                            coursesList += &#39;&lt;li&gt;&#39; + response.courses[i] + &#39;&lt;/li&gt;&#39;;
+                        }
+                        coursesList += &#39;&lt;/ul&gt;&#39;;
+                        $(&#39;#searchResult&#39;).html(coursesList);
+                    } else {
+                        $(&#39;#searchResult&#39;).html(&#39;&lt;p&gt;No courses found for this student.&lt;/p&gt;&#39;);
+                    }
+                },
+                error: function(xhr) {
+                    $(&#39;#searchResult&#39;).html(&#39;&lt;p&gt;An error occurred.&lt;/p&gt;&#39;);
+                }
+            });
+        });
+
+
+        &lt;!-- to show student details based on the course input --&gt;
+        function redirectToRegisteredStudents(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var courseTitle = document.getElementById(&#39;course_title&#39;).value;
+            if (courseTitle) {
+                // Encode the course title to be URL safe
+                var encodedCourseTitle = encodeURIComponent(courseTitle);
+                // Redirect to the desired URL
+                window.location.href = &#39;/registered/&#39; + encodedCourseTitle + &#39;/&#39;;
+            }
+        }
+
+    &lt;/script&gt;   
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+        </section>
+
+        <section id="section5">
+<h2 id="see-the-output">See the output</h2>
+<ul>
+<li>run <code>python manage.py runserver</code></li>
+<li>go to this url <code>http://localhost:8000/register/</code></li>
+<li>Register some students.</li>
+<li>Check the students opted courses by entering their name.</li>
+<li>If you see in your local server running terminal you'll see "HTTP POST parameters that are sent to your view without loading the page"</li>
+</ul>
+</section>
+        </section>
+      <section id="section6">
+        <h2 id="make-migrations-and-create-superuser">Resourses</h2>
+        <ul>
+          <li><a href="https://www.w3schools.com/xml/ajax_intro.asp"></a>w3schools</li>
+          <li><a href="https://api.jquery.com/Jquery.ajax/"></a> jQuery.ajax() | jQuery API Documentation </li>
+        </ul>
+
+      </section>
+
+      </div>
+      <!-- Table of Contents -->
+      <div class="col-md-4">
+        <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+          <nav class="nav nav-pills flex-column">
+            <h2>Contents</h2>
+            <a class="nav-link" href="#section2">urls.py</a>
+            <a class="nav-link" href="#section3">view.py</a>
+            <a class="nav-link" href="#section4">register.html</a>
+            <a class="nav-link" href="#section5">See the output</a>
+            <a class="nav-link" href="#section6">Resourses</a>
+          </nav>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+<h2> Watch a quich video summary on how to run this program</h2>
+<h3> Watch it at 2x speed</h3>
+<video width="900px"  controls>
+  <source src="/static/Search_using_ajax.mp4/" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+{% endblock content %}

@@ -1,0 +1,310 @@
+{% extends "layout.html" %}
+{% block content %}
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 2, 3rd Question</h4>
+      <h1 id="question-5">Develop a Django app that performs student registration to a course. It should also display list of students registered for any selected course. Create students and course as models with enrolment as ManyToMany field</h1>
+        <hr>
+      </div>
+
+<div class="container-fluid">
+
+
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-md-8">
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Note <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-text" viewBox="0 0 16 16">
+          <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+          <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8m0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+        </svg></h4>
+        <h5 class="mb-0">Make sure to execute this program properly and also keep this one for future alterations cause we are going to use this exact program for Moduel4's 1st and 2nd lab programs</h5>
+      </div>
+
+      <section id="section1">
+        <h2 id="start-project-and-app">Start project and app</h2>
+        <ul>
+          <li>No need of creating new virtual environment, If there exist a previously created virtual environment just activate it and follow the below steps.</li>
+          <li>start a new django project <code>django-admin startproject models_demo</code>, enter into that directory <code>cd models_demo</code> and open VScode in that directory <code>code .</code></li>
+        </ul>
+      </section>
+      <section id="section2">
+        <h2 id="vscode-part">VScode part</h2>
+        <ul>
+          <li>In VS code open terminal and start a new app <code>python3 manage.py startapp models_app</code>.</li>
+          <li>Register this app in <code>settings.py</code> file. Open <code>settings.py</code> and goto <strong>Installed apps</strong> section and add app name <code>models_app</code> in the list.</li>
+        </ul>
+      </section>
+      <section id="section3">
+        <h2 id="edit-urlspy-file-in-models_demo">Edit <code>urls.py</code> file in models_demo</h2>
+        <ul>
+          <li>edit that file as shown below.</li>
+        </ul>
+        <pre><code class="language-Python">from django.contrib import admin
+from django.urls import path,include
+
+urlpatterns = [
+    path(&#39;admin/&#39;, admin.site.urls),
+    path(&#39;&#39;,include(&quot;models_app.urls&quot;))
+]
+        </code></pre>
+      </section>
+      <section id="section4">
+        <h2 id="creat-a-models">Creat a models</h2>
+        <img src="/static/Student_registration.png" style="border-radius: 8px; width: 800px;"></img>
+        <ul>
+          <li>goto models_app folder and edit <code>model.py</code> file</li>
+          <li>models_app-&gt;<code>models.py</code></li>
+        </ul>
+        <pre><code class="language-python">
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.name
+
+class Course(models.Model):
+    title = models.CharField(max_length=200)
+    students = models.ManyToManyField(Student, related_name=&#39;courses&#39;, blank=True)
+
+    def __str__(self):
+        return self.title
+        </code></pre>
+      </section>
+      <section id="section5">
+        <h2 id="register-the-models-in-adminpy-file">Register the models in admin.py file</h2>
+        <ul>
+          <li>models_app-&gt;<code>admin.py</code></li>
+        </ul>
+        <pre><code class="language-python">
+from django.contrib import admin
+from models_app.models import Student,Course
+
+# Register your models here.
+admin.site.register(Student)
+admin.site.register(Course)
+        </code></pre>
+      </section>
+      <section id="section6">
+        <h2 id="create-a-templates-folder-and-add-html-files">Create a templates folder and add html files</h2>
+        <ul>
+          <li>create a templates folder at models_demo project folder not in the app.</li>
+          <li>Register this templates folder in <code>settings.py</code>.</li>
+          <li>In models_demo-&gt;<code>settings.py</code> add this line <code>&#39;DIRS&#39;:[BASE_DIR,templates&#39;],</code></li>
+        </ul>
+        <pre><code class="language-python">TEMPLATES = [
+    {
+        &#39;BACKEND&#39;: &#39;django.template.backends.django.DjangoTemplates&#39;,
+        &#39;DIRS&#39;: [BASE_DIR,&#39;templates&#39;], # &lt;----------------- add here.
+        &#39;APP_DIRS&#39;: True,
+        # rest of the code #
+            ...
+        </code></pre>
+        <ul>
+          <li>Now in templates folder add these html files <code>register.html</code> and <code>registered.html</code></li>
+          <li><code>register.html</code></li>
+        </ul>
+        <pre><code >&lt;!DOCTYPE html&gt;
+&lt;head&gt;
+    &lt;title&gt;Register Student to Course&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Register Student&lt;/h2&gt;
+    &lt;form method=&quot;post&quot; action=&quot;&#123;% url &#39;register&#39; %&#125;&quot;&gt;
+        &#123;% csrf_token %&#125;
+        &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;name&quot; name=&quot;name&quot; maxlength=&quot;50&quot; required&gt;
+        &lt;br&gt;
+        &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt;
+        &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;br&gt;
+        &lt;label for=&quot;course&quot;&gt;Select Course:&lt;/label&gt;
+        &lt;select id=&quot;course&quot; name=&quot;course&quot; required&gt;
+            &#123;% for course in courses %&#125;
+                &lt;option value=&quot;&#123;&#123; course.id &#125;&#125;&quot;&gt;&#123;&#123; course.title &#125;&#125;&lt;/option&gt;
+            &#123;% endfor %&#125;
+        &lt;/select&gt;
+        &lt;br&gt;
+        &lt;button type=&quot;submit&quot;&gt;Register&lt;/button&gt;
+    &lt;/form&gt;
+    &#123;% if messages %&#125;
+        &lt;ul class=&quot;messages&quot;&gt;
+            &#123;% for message in messages %&#125;
+                 &lt;li&#123;% if message.tags %&#125; class=&quot;&#123;&#123; message.tags &#125;&#125;&quot;&#123;% endif %&#125;&gt;&#123;&#123; message &#125;&#125;&lt;/li&gt;
+            &#123;% endfor %&#125;
+        &lt;/ul&gt;
+    &#123;% endif %&#125;
+
+    &lt;!-- Let the students view who all opted for particular course by selecting the course --&gt;
+
+    &lt;form id=&quot;redirectForm&quot; method=&quot;get&quot; onsubmit=&quot;redirectToRegisteredStudents(event)&quot;&gt;
+        &lt;label for=&quot;course_title&quot;&gt;Enter Course Title:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;course_title&quot; name=&quot;course_title&quot; required&gt;
+        &lt;button type=&quot;submit&quot;&gt;Go&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;script&gt;
+        function redirectToRegisteredStudents(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var courseTitle = document.getElementById(&#39;course_title&#39;).value;
+            if (courseTitle) {
+                // Encode the course title to be URL safe
+                var encodedCourseTitle = encodeURIComponent(courseTitle);
+                // Redirect to the desired URL
+                window.location.href = &#39;/registered/&#39; + encodedCourseTitle + &#39;/&#39;;
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
+        <ul>
+          <li><code>registered.html</code></li>
+        </ul>
+        <pre><code >&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Registered Students&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Registered Students for &#123;&#123; course.title &#125;&#125;&lt;/h2&gt;
+    &lt;ul&gt;
+        &#123;% for student in students %&#125;
+            &lt;li&gt;&#123;&#123; student.name &#125;&#125; - &#123;&#123; student.email &#125;&#125;&lt;/li&gt;
+        &#123;% empty %&#125;
+            &lt;li&gt;No students registered for this course yet.&lt;/li&gt;
+        &#123;% endfor %&#125;
+    &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
+
+      </section>
+      <section id="section7">
+        <h2 id="write-views-to-render-these-html-files">Write views to render these html files.</h2>
+        <ul>
+          <li>models_app-&gt;views.py</li>
+        </ul>
+        <pre><code class="language-python">from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.contrib import messages
+from .models import Student, Course
+
+# Create your views here.
+def test(request):
+    return HttpResponse(&quot;this is a test&quot;)
+
+
+def register(request):
+    if request.method == &#39;POST&#39;:
+        student_name = request.POST[&#39;name&#39;]
+        student_email = request.POST[&#39;email&#39;]
+        course_id = request.POST[&#39;course&#39;]
+        course = Course.objects.get(pk=course_id)
+        student, created = Student.objects.get_or_create(name=student_name, email=student_email)
+        course.students.add(student)
+        messages.success(request, &#39;Student successfully added to the course.&#39;)
+        return redirect(&#39;register&#39;)
+    else:
+        courses = Course.objects.all()
+        return render(request, &#39;register.html&#39;, {&#39;courses&#39;: courses})
+
+def registered(request, course_title):
+    course = get_object_or_404(Course, title=course_title)
+    students = course.students.all()
+    return render(request, &#39;registered.html&#39;, {&#39;course&#39;: course, &#39;students&#39;: students})
+        </code></pre>
+      </section>
+      <section id="section8">
+        <h2 id="set-urlspy-in-models_app-app">Set urls.py in models_app app.</h2>
+        <ul>
+          <li><code>models_app-&gt;urls.py</code></li>
+        </ul>
+        <pre><code class="language-python">from django.urls import path,include
+from . import views
+
+urlpatterns = [
+    path(&#39;test/&#39;,views.test,name=&quot;test&quot;),
+    path(&#39;register/&#39;,views.register,name=&quot;register&quot;),
+    path(&#39;registered/&lt;str:course_title&gt;/&#39;, views.registered, name=&#39;registered&#39;),
+]
+      </code></pre>      </section>
+      <section id="section9">
+        <h2 id="creating-super-user-and-making-migrations">Creating super user and making migrations.</h2>
+        <ul>
+          <li>Before we create a super user we should make migrations and migrate the contents.</li>
+          <li>now in terminal enter <code>python3 manage.py makemigrations</code>.</li>
+          <li>after making migrations migrate it with this command <code>python3 manage.py migrate</code>.</li>
+          <li>Now create a super-user.</li>
+          <li>In terminal enter <code>python3 manage.py createsuperuser</code></li>
+          <li>enter required credentials.</li>
+          <li>Run <code>python3 manage.py runserver</code>.</li>
+        </ul>
+        <section id="section10">
+          <h2 id="admin-panel">Admin panel</h2>
+          <ul>
+            <li>go to admin panel and enter required credentials and log in to it.</li>
+            <li>In courses add some courses for students to register.</li>
+          </ul>  </section>
+          <section id="section11">
+            <h2 id="registering-for-courses">Registering for courses</h2>
+            <ul>
+              <li>enter this url <code>http://localhost:8000/register/</code>.</li>
+              <li>enter the fields, select the course and hit the register button.</li>
+              <li>you should see registration successful message.</li>
+            </ul>  </section>
+            <section id="section12">
+              <h2 id="viewing-the-registered-students-for-particular-subject">Viewing the registered students for particular subject</h2>
+              <ul>
+                <li>In the same page enter the course title field (the course should exist, don&#39;t enter course which is not created) and hit enter.</li>
+                <li>you should see all the registered students for that subject.</li>
+              </ul>  </section>
+              <h3 id="we-can-perform-the-same-in-the-admin-panel-by-directly-adding-the-contents-to-it">We can perform the same in the admin panel by directly adding the contents to it.</h3>
+      <section id="section13">
+        <h2 id="make-migrations-and-create-superuser">Resourses</h2>
+        <ul>
+          <li><a href="https://docs.djangoproject.com/en/5.0/topics/db/models/">Django Models</a></li>
+          <li><a href="https://docs.djangoproject.com/en/5.0/ref/contrib/messages/">Djanog Messages</a></li>
+        </ul>
+
+      </section>
+
+    </div>
+    <!-- Table of Contents -->
+    <div class="col-md-4">
+      <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+        <nav class="nav nav-pills flex-column">
+          <h2>Contents</h2>
+          <a class="nav-link" href="#section1">Start project and app</a>
+          <a class="nav-link" href="#section2">VScode part</a>
+          <a class="nav-link" href="#section3">Edit urls.py file in models_demo</a>
+          <a class="nav-link" href="#section4">Creat a models</a>
+          <a class="nav-link" href="#section5">Register the models in admin.py file</a>
+          <a class="nav-link" href="#section6">Create a templates folder and add html files</a>
+          <a class="nav-link" href="#section7">Write views to render these html files.</a>
+          <a class="nav-link" href="#section8">Set urls.py in models_app app.</a>
+          <a class="nav-link" href="#section9">Creating super user and making migrations.</a>
+          <a class="nav-link" href="#section10">Admin panel</a>
+          <a class="nav-link" href="#section11">Registering for courses</a>
+          <a class="nav-link" href="#section12">Viewing the registered students for particular subject</a>
+        </nav>
+      </nav>
+    </div>
+  </div>
+</div>
+<h2> Watch a quich video summary on how to run this program</h2>
+<h3> Watch it at 2x speed</h3>
+<video width="1000" height="500" controls>
+  <source src="/static/Student_Registration_compressed.mp4/" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+{% endblock content %}

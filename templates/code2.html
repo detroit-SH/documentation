@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block content %}
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 1, 4th Question</h4>
+      <h1 id="question-2">Develop a Django app that displays date and time four hours ahead and four hours before as an offset of current date and time in server.</h1>
+        <hr>
+        <p class="mb-0"></p>
+      </div>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-md-8">
+      <section id="section1">
+        <h2 id="edit-urlspy-file">Edit urls.py file</h2>
+        <ul>
+          <li>In the same previous project add the offsets url for printing the date time with offset of current date and time.</li>
+        </ul>
+        <pre><code class="language-python">
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("datetime/",views.datetimee,name="datetime"),
+    path("offset/",views.offset,name="offset"),
+]
+        </code></pre>
+      </section>
+      <section id="section2">
+        <h2 id="edit-viewspy">Edit views.py</h2>
+        <ul>
+          <li>views.py should be created here <code>datetime/datetime/views.py</code>, and add the below contents to it.</li>
+        </ul>
+        <pre><code class="language-python">
+from django.shortcuts import HttpResponse,render
+from datetime import datetime,timedelta
+
+def datetimee(request):
+    now = datetime.now()
+    return HttpResponse(f&quot;current datetime is {now}&quot;) 
+
+def offset(request):
+    now = datetime.now()
+    offset=4
+    four_before=now-timedelta(hours=offset)
+    four_after=now+timedelta(hours=offset)
+    HTML=f&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;something&lt;/title&gt;&lt;/head&gt;&quot;\
+        f&quot;&lt;p&gt;current time is: {now}&quot;\
+        f&quot;&lt;p&gt;four houres after is: {four_after}&quot;\
+        f&quot;&lt;p&gt;four houres before is: {four_before}&quot;
+    return HttpResponse(HTML)
+        </code></pre>
+
+      </section>
+      <section id="section3">
+        <h2 id="see-the-output">See the OUTPUT</h2>
+        <ul>
+          <li>After saving the written program files run the local server with <code>python manage.py runserver</code> command and follow the localhost link.</li>
+          <li>redirect the local host line to the written url <code>datetime/</code></li>
+          <li>the current datetime should be printed as output.</li>
+        </ul>
+
+      </section>
+    </div>
+    <!-- Table of Contents -->
+    <div class="col-md-4">
+      <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+        <nav class="nav nav-pills flex-column">
+            <h2>Contents</h2>
+          <a class="nav-link" href="#section1">Edit urls.py file</a>
+          <a class="nav-link" href="#section2">Edit views.py</a>
+          <a class="nav-link" href="#section3">See the OUTPUT</a>
+        </nav>
+      </nav>
+    </div>
+  </div>
+</div>
+{% endblock content %}

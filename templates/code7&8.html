@@ -1,0 +1,270 @@
+{% extends "layout.html" %}
+{% block content %}
+
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Module 4, 1st Question</h4>
+      <h1 id="question-7">1) For students enrolment developed in Module 2, create a generic class view which displays list of students and detailview that displays student details for any selected student in the list.</h1>
+        <hr>
+        <h4 class="alert-heading">Module 4, 2nd Question</h4>
+      <h1 id="question-8">2) Develop example Django app that performs CSV and PDF generation for any models created in previous laboratory component.</h1>
+      </div>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-md-8">
+      <div class="alert alert-success alert-custom" role="alert">
+        <h4 class="alert-heading">Note <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-text" viewBox="0 0 16 16">
+          <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+          <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8m0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+        </svg></h4>
+        <p>
+          Before beginning this program, ensure that you have successfully completed Module 2&#39;s third lab program for student registration. That program must be readily available to proceed with the current task. If you have not yet completed it, please go to program list and select student registration program, follow the instuctions, complete it, then try to execute these programs.</p>
+        <hr>
+        <p class="mb-0"></p>
+      </div>
+      <ul>
+        <li>In one shot we can complete module 4&#39;s two programs.</li>
+        <li>Now follow the instructions carefully, the only thing we have to do is to edit the previously existing files in order to get the output, So change the below files contents.</li>
+      </ul>
+      <section id="section1">
+        <h2 id="no-changes-in-modelspy-and-adminpy-so-dont-alter-them">No changes in models.py and admin.py so don&#39;t alter them.</h2>
+      </section>
+      <section id="section2">
+        <h2 id="edit-viewspy">Edit views.py</h2>
+<ul>
+<li>Rewrite the whole views.py file with the below contents.</li>
+</ul>
+<pre><code class="language-python">from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.contrib import messages
+from .models import Student, Course
+from django.views.generic import ListView, DetailView
+from django.views import View
+import csv
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import io
+
+
+# Create your views here.
+def test(request):
+    return HttpResponse(&quot;this is a test&quot;)
+
+
+def register(request):
+    if request.method == &#39;POST&#39;:
+        student_name = request.POST[&#39;name&#39;]
+        student_email = request.POST[&#39;email&#39;]
+        course_id = request.POST[&#39;course&#39;]
+        course = Course.objects.get(pk=course_id)
+        student, created = Student.objects.get_or_create(name=student_name, email=student_email)
+        course.students.add(student)
+        messages.success(request, &#39;Student successfully added to the course.&#39;)
+        return redirect(&#39;register&#39;)
+    else:
+        courses = Course.objects.all()
+        return render(request, &#39;register.html&#39;, {&#39;courses&#39;: courses})
+
+def registered(request, course_title):
+    course = get_object_or_404(Course, title=course_title)
+    students = course.students.all()
+    return render(request, &#39;registered.html&#39;, {&#39;course&#39;: course, &#39;students&#39;: students})
+
+
+# generic class view
+
+
+class StudentListView(ListView):
+    model = Student
+    template_name = &#39;student_list.html&#39;  # Specify your template name/location
+    context_object_name = &#39;students&#39;  # Name to use for the list of objects in the template
+
+class StudentDetailView(DetailView):
+    model = Student
+    template_name = &#39;student_detail.html&#39;  # Specify your template name/location
+    context_object_name = &#39;student&#39;  # Name to use for the single object in the template
+
+
+
+# for csv file generation
+
+class ExportCSVView(View):
+    def get(self, request):
+        # Create the HttpResponse object with the appropriate CSV header.
+        response = HttpResponse(content_type=&#39;text/csv&#39;)
+        response[&#39;Content-Disposition&#39;] = &#39;attachment; filename=&quot;students.csv&quot;&#39;
+
+        writer = csv.writer(response)
+        writer.writerow([&#39;Name&#39;, &#39;Email&#39;])
+
+        students = Student.objects.all()
+        for student in students:
+            writer.writerow([student.name, student.email])
+
+        return response
+
+
+# for pdf generation
+
+class ExportPDFView(View):
+    def get(self, request):
+        # Create the HttpResponse object with the appropriate PDF header.
+        response = HttpResponse(content_type=&#39;application/pdf&#39;)
+        response[&#39;Content-Disposition&#39;] = &#39;attachment; filename=&quot;students.pdf&quot;&#39;
+
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer, pagesize=letter)
+        p.setFont(&quot;Helvetica&quot;, 12)
+
+        students = Student.objects.all()
+        y = 750
+        for student in students:
+            p.drawString(30, y, f&quot;Name: {student.name}, Email: {student.email}&quot;)
+            y -= 20
+
+        p.showPage()
+        p.save()
+
+        buffer.seek(0)
+        return HttpResponse(buffer, content_type=&#39;application/pdf&#39;)
+</code></pre>
+      </section>
+      <section id="section3">
+        <h2 id="edit-the-urlspy-file">Edit the urls.py file</h2>
+<ul>
+<li>Rewrite the whole urls.py file as below.</li>
+</ul>
+<pre><code class="language-python">from django.urls import path,include
+from . import views
+from .views import StudentListView, StudentDetailView
+from .views import ExportCSVView , ExportPDFView
+
+
+urlpatterns = [
+    path(&#39;test/&#39;,views.test,name=&quot;test&quot;),
+    path(&#39;register/&#39;,views.register,name=&quot;register&quot;),
+    # path(&#39;registered/&lt;int:course_id&gt;/&#39;,views.registered,name=&quot;registered&quot;),
+    path(&#39;registered/&lt;str:course_title&gt;/&#39;, views.registered, name=&#39;registered&#39;),
+    # urls for generice class view
+    path(&#39;students/&#39;, StudentListView.as_view(), name=&#39;student_list&#39;),
+    path(&#39;students/&lt;int:pk&gt;/&#39;, StudentDetailView.as_view(), name=&#39;student_detail&#39;),
+    # urls for csv and pdf generation
+    path(&#39;export/csv/&#39;, ExportCSVView.as_view(), name=&#39;export_csv&#39;),
+    path(&#39;export/pdf/&#39;, ExportPDFView.as_view(), name=&#39;export_pdf&#39;),
+
+
+]
+</code></pre>
+
+      </section>
+      <section id="section4">
+<h2 id="add-these-html-files-in-the-templates-directory">Add these html files in the templates directory.</h2>
+<ul>
+<li><code>base.html</code>, <code>student_detail.html</code>, and <code>student_list.html</code></li>
+<li>In base.html</li>
+</ul>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Student Course Project&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Student Course Project&lt;/h1&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;&#123;% url &#39;export_csv&#39; %&#125;&quot;&gt;Export Students to CSV&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;&#123;% url &#39;export_pdf&#39; %&#125;&quot;&gt;Export Students to PDF&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+        <ul>
+<li>In <code>student_detail.html</code></li>
+</ul>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Student Details&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Student Details&lt;/h2&gt;
+    &lt;p&gt;&lt;strong&gt;Name:&lt;/strong&gt; &#123;&#123; student.name &#125;&#125;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; &#123;&#123; student.email &#125;&#125;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Courses:&lt;/strong&gt;&lt;/p&gt;
+    &lt;ul&gt;
+        &#123;% for course in student.courses.all %&#125;
+            &lt;li&gt;&#123;&#123; course.title &#125;&#125;&lt;/li&gt;
+        &#123;% endfor %&#125;
+    &lt;/ul&gt;
+    &lt;a href=&quot;&#123;% url &#39;student_list&#39; %&#125;&quot;&gt;Back to Student List&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+        <ul>
+<li>In <code>student_list.html</code>.</li>
+</ul>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Student List&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h2&gt;Student List&lt;/h2&gt;
+    &lt;ul&gt;
+        &#123;% for student in students %&#125;
+            &lt;li&gt;&lt;a href=&quot;&#123;% url &#39;student_detail&#39; student.pk %&#125;&quot;&gt;&#123;&#123; student.name &#125;&#125;&lt;/a&gt;&lt;/li&gt;
+        &#123;% endfor %&#125;
+    &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre>
+      </section>
+      <section id="section5">
+        
+<h2 id="install-the-required-modules">Install the required modules</h2>
+<ul>
+<li>Before running the live server install the required modules. </li>
+<li><code>pip3 install reportlab</code></li>
+</ul>
+      </section>
+      <h2 id="install-the-required-modules">See the output</h2>
+<ul>
+<li>See the output by reffering the urls.py files urls.</li>
+</ul>
+      <section id="section6">
+        <h2 id="make-migrations-and-create-superuser">Resourses</h2>
+        <ul>
+          <li><a href="https://docs.djangoproject.com/en/5.0/topics/db/models/">Django Models</a></li>
+          <li><a href="https://docs.djangoproject.com/en/5.0/ref/contrib/messages/">Djanog Messages</a></li>
+          <li><a href="https://docs.djangoproject.com/en/5.0/topics/class-based-views/generic-display/">Djanog Built-in class-based generic views</a></li>
+        </ul>
+
+      </section>
+
+    </div>
+    <!-- Table of Contents -->
+    <div class="col-md-4">
+      <nav id="navbar-example2" class="navbar navbar-light bg-dark">
+        <nav class="nav nav-pills flex-column">
+          <h2>Contents</h2>
+          <a class="nav-link" href="#section1">No changes in models.py and admin.py so don't alter them.</a>
+          <a class="nav-link" href="#section2">Edit views.py</a>
+          <a class="nav-link" href="#section3">Edit the urls.py file</a>
+          <a class="nav-link" href="#section4">Add these html files in the templates directory.</a>
+          <a class="nav-link" href="#section5">Install the required modules</a>
+          <a class="nav-link" href="#section6">Resourses</a>
+        </nav>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+<h2> Watch a quich video summary on how to run this program</h2>
+<h3> Watch it at 2x speed</h3>
+<video width="900px"  controls>
+  <source src="/static/generic_view_and_pdf_csv.mp4/" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+{% endblock content %}
