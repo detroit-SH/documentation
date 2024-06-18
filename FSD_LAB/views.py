@@ -35,8 +35,8 @@ def code9(request):
 def code10(request):
     return render(request,'code10.html')
 
-def ack(request):
-    return render(request,'acknowledge.html')
+# def ack(request):
+#    return render(request,'acknowledge.html')
 
 def me(request):
     return render(request,'me.html')
