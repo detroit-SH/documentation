@@ -17,7 +17,7 @@ urlpatterns = [
     path('code9/',views.code9,name="code9"),
     path('code10/',views.code10,name="code10"),
     path('test/',views.test,name="test"),
-    path('ack/',views.ack,name="ack"),
+    # path('ack/',views.ack,name="ack"),
     path('me/',views.me,name="me"),
     # path('about/',views.about,name="about"),
 ]
