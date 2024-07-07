@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("input");
   const output = document.querySelector(".output");
   const jumpscare = document.getElementById("jumpscare");
-  console.log("passoword is secret");
+  console.log("password is secret");
+
   const asciiArt = `
        )            (
       /(   (\\___/)  )\\  _____________
@@ -59,21 +60,19 @@ https://asciiart.website/index.php?art=objects/computers
     const args = command.split(" ");
     const cmd = args[0].toLowerCase();
     let response = "";
+    let message = ""; // Declare message variable here
 
     switch (cmd) {
       case "help":
         message = `Available commands:\n<span class="command ">[1] help</span>\t\t<span style="color: #f88236;">To deal with this website</span>\n<span class="command ">[2] whois</span>\t\t<span style="color: #f88236;">Who is Shashank V H</span>\n<span class="command ">[3] clear</span>\t\t<span style="color: #f88236;">To Clear the screen</span>\n<span class="command ">[4] color</span>\t\t<span style="color: #f88236;">To select the color of you choice</span>\n<span class="command ">[5] Projects</span>\t\t<span style="color: #f88236;">To see my projects</span>\n<span class="command ">[6] social</span>\t\t<span style="color: #f88236;">Social Networks</span>\n<span class="command ">[7] email</span>\t\t<span style="color: #f88236;">Email me</span>\n<span class="command ">[8] banner</span>\t\t<span style="color: #f88236;">To see the initial ascii-art</span>\n<span class="command ">[9] secret</span>\t\t<span style="color: #f88236;">Top secret</span>\n<span class="command ">[10] donot</span>\t\t<span style="color: #f88236;">As the command itself say don't enter it</span>`;
         printWithDelay(message);
-        // lineprint(message, 'command', 100); // Example delay of 100ms per line
-
         return;
-      // break;
       case "ls":
         window.open(
           "https://media.tenor.com/mZZoOtDcouoAAAAM/stop-it-get-some-help.gif",
           "_blank",
         );
-        const message = `enter <span class='command'>'help'</span>`;
+        message = `enter <span class='command'>'help'</span>`;
         printWithDelay(message);
         return;
       case "whoami":
@@ -84,7 +83,6 @@ https://asciiart.website/index.php?art=objects/computers
         response = "You're in my website";
         break;
       case "whois":
-        // printWithDelay(whois);
         message = `<span class="paragraph">Hey, I'm Shashank V H! 👋</span>
 <span class="paragraph">I'm a pre-final year Information Science engineering student passionate about technology. I like everything related to tech and </span><span class="paragraph"> problem-solving,whether it's creating websites like this one, building documentation platforms that make complex information accessible </span><span class="paragraph">and fun, automating daily tasks with my programming knowledge or simply staring at the wall thinking one day i'll time travel to other </span><span class="paragraph">galaxy and watch dinoseres of earth from there.</span>
 <span class="paragraph">From exploring the latest tech trends to building projects that challenge my skills, I'm always looking for ways to innovate and learn. </span>
@@ -93,7 +91,6 @@ https://asciiart.website/index.php?art=objects/computers
         printWithDelay(message);
         response = whois;
         break;
-      // lineprint(message, "paragraph", 100);
       case "clear":
         output.innerHTML = "";
         return;
@@ -121,7 +118,6 @@ https://asciiart.website/index.php?art=objects/computers
         message = `Projects:\n<span class="command ">Django_Documentation_website:</span>\n<span style="color: #f88236;">A comprehensive documentation website for the VTU 6th Semester Fullstack Development Lab programs. This site provides </span>\n<span style="color: #f88236;">detailed guides, video summaries, and downloadable resources for each lab exercise.</span>\n[Live Link]: 👉 <a href='https://ShashankVH.pythonanywhere.com' target='_blank'>https://ShashankVH.pythonanywhere.com</a>\n-----------------------------------------------------------------------------------------------------------------------------------------\n<span class="command ">Game and Gamers Data storage:</span>\n<span style="color: #f88236;">A C program which has multiple games and demonstrates how the users data gets stored when users play the game</span>\n[Github Link]:👉 <a href='https://ShashankVH.pythonanywhere.com' target='_blank'>https://ShashankVH.pythonanywhere.com</a>\n-----------------------------------------------------------------------------------------------------------------------------------------\n<span class="command">SQL playground:</span>\n<span style="color: #f88236;">A web application which allows users to perform CRUD operation on a SQL database, and let them query through the database</span>\n<span style="color: #f88236;">and also have some prebuilt built Relational Databases where a users can query the database to get the answers for the questions asked in it.</span>\n[Github Link]: 👉 <a href='https://ShashankVH.pythonanywhere.com' target='_blank'>https://ShashankVH.pythonanywhere.com</a>\n-----------------------------------------------------------------------------------------------------------------------------------------`;
         printWithDelay(message);
         break;
-        break;
       case "social":
         message = `\n<span class="command ">linkedin</span>\t\t<a style="color: #f88236; "href="https://www.linkedin.com/in/shashank-v-ha13538229/">linkedine/Shashank V H</a>`;
         printWithDelay(message);
@@ -143,13 +139,10 @@ https://asciiart.website/index.php?art=objects/computers
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             "_blank",
           );
-          // window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
           newWindow.document.close();
         } else {
           alert("Incorrect secret key. Try again!");
         }
-        break;
-      case "secret":
         break;
       default:
         response = `Command not found: ${cmd}`;
@@ -199,20 +192,20 @@ https://asciiart.website/index.php?art=objects/computers
   }
 
   function printWithDelay(text) {
-    const lines = text.split("\n"); // Split text into lines based on newline characters
+    const lines = text.split("\n");
 
     let lineIndex = 0;
 
     const interval = setInterval(() => {
       const line = lines[lineIndex];
-      printOutput(line + "<br>"); // Print line with HTML line break
+      printOutput(line + "<br>");
 
       lineIndex++;
 
       if (lineIndex === lines.length) {
-        clearInterval(interval); // Stop interval after printing all lines
+        clearInterval(interval);
       }
-    }, 100); // Adjust the delay (in milliseconds) between each line print
+    }, 100);
   }
 
   function handleInput(event) {
