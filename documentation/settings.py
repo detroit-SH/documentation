@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'FSD_LAB',
+    'web_terminal',
 ]
 
 MIDDLEWARE = [
