@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const output = document.querySelector(".output");
   const jumpscare = document.getElementById("jumpscare");
   console.log("password is secret");
+  console.log("'secret' command was inspired by ForrestKnight");
 
   const asciiArt = `
        )            (
