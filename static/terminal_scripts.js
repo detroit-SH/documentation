@@ -86,11 +86,16 @@ https://asciiart.website/index.php?art=objects/computers
         response = "You're in my website";
         break;
       case "whois":
-        message = `<span class="paragraph">Hey, I'm Shashank V H! 👋</span>
-<span class="paragraph">I'm a pre-final year Information Science engineering student passionate about technology. I like everything related to tech and </span><span class="paragraph"> problem-solving,whether it's creating websites like this one, building documentation platforms that make complex information accessible </span><span class="paragraph">and fun, automating daily tasks with my programming knowledge or simply staring at the wall thinking one day i'll time travel to other </span><span class="paragraph">galaxy and watch dinoseres of earth from there.</span>
-<span class="paragraph">From exploring the latest tech trends to building projects that challenge my skills, I'm always looking for ways to innovate and learn. </span>
-<span class="paragraph">When I'm not coding, you might find me scratching my head for new ideas, or at local tea shop fully caffeinated, or simply starring at wall.</span>
-<span class="paragraph">Want to trash talk about the editor you use for code and the OS, or just want to hang out and have a tea or coffee?</span><span class="paragraph"> Let's connect and create something amazing together!</span>`;
+        // message = `<span class="paragraph">Hey, I'm Shashank V H! 👋</span>
+          message = `<span class="paragraph">Hello, I’m Shashank V H.</span>
+          <span class="paragraph">I’m a final year Information Science Engineering student with a deep passion for technology and problem-solving.</span> 
+          <span class="paragraph">Whether it's creating user-friendly websites, developing documentation platforms that simplify complex information,</span> 
+          <span class="paragraph">or automating daily tasks using my programming skills, I enjoy leveraging technology to innovate and improve efficiency.</span>
+          <span class="paragraph">I’m constantly exploring the latest tech trends and working on projects that challenge my abilities, as I believe in continuous learning and growth.</span>
+          <span class="paragraph">My enthusiasm extends beyond coding, and I’m always looking for new ideas to explore.</span>
+          <span class="paragraph">In my downtime, you might find me brainstorming for fresh ideas, enjoying a cup of tea, or reflecting on the endless possibilities of technology.</span>
+          <span class="paragraph">If you’re interested in discussing technology, brainstorming ideas, or even collaborating on a project, feel free to connect.</span> 
+          <span class="paragraph">Let’s create something remarkable together.</span>`;
         printWithDelay(message);
         response = whois;
         break;
