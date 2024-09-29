@@ -87,10 +87,8 @@ https://asciiart.website/index.php?art=objects/computers
         break;
       case "whois":
         // message = `<span class="paragraph">Hey, I'm Shashank V H! 👋</span>
-          message = `<span class="paragraph">Hello, I’m Shashank V H.</span>
-          <span class="paragraph">I’m a final year Information Science Engineering student with a deep passion for technology and problem-solving.</span> 
-          <span class="paragraph">Whether it's creating user-friendly websites, developing documentation platforms that simplify complex information,</span> 
-          <span class="paragraph">or automating daily tasks using my programming skills, I enjoy leveraging technology to innovate and improve efficiency.</span>
+          message = `<span class="paragraph">Hello, I’m Shashank V H.👋</span>
+          <span class="paragraph">I’m a final year Information Science Engineering student with a deep passion for technology and problem-solving.</span><span class="paragraph">Whether it's creating user-friendly websites, developing documentation platforms that simplify complex information,</span><span class="paragraph">or automating daily tasks using my programming skills, I enjoy leveraging technology to innovate and improve efficiency.</span>
           <span class="paragraph">I’m constantly exploring the latest tech trends and working on projects that challenge my abilities, as I believe in continuous learning and growth.</span>
           <span class="paragraph">My enthusiasm extends beyond coding, and I’m always looking for new ideas to explore.</span>
           <span class="paragraph">In my downtime, you might find me brainstorming for fresh ideas, enjoying a cup of tea, or reflecting on the endless possibilities of technology.</span>
