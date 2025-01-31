@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include("FSD_LAB.urls")),
     path('',include("web_terminal.urls")),
+    path('',include("T2W.urls")),
 ]
