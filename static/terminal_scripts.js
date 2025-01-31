@@ -4,8 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const jumpscare = document.getElementById("jumpscare");
   const password = "secret";
   // console.log("The secret command is '" + password + "' itself");
-  console.log("The secret command is '\x1b[1m" + password + "\x1b[0m' itself");
-  console.log("'secret' command was inspired by ForrestKnight");
+  console.log("The secret command's password is '\x1b[1m" + password + "\x1b[0m' itself");
+  console.log("Try to enter '\x1b[1m" + password + "\x1b[0m' in the box");
+  console.log("'secret' command is inspired by ForrestKnight");
 
   const asciiArt = `
        )            (
@@ -86,17 +87,21 @@ https://asciiart.website/index.php?art=objects/computers
         response = "You're in my website";
         break;
       case "whois":
-        // message = `<span class="paragraph">Hey, I'm Shashank V H! 👋</span>
           message = `<span class="paragraph">Hello, I’m Shashank V H.👋</span>
+          <span class="paragraph">Hacker, builder, and problem solver.</span>
+          <span class="paragraph">Currently accepting job offers & coffee/Tea invitations. ☕😄</span>`
+        printWithDelay(message);
+        // response = whois;
+        // message = `<span class="paragraph">Hey, I'm Shashank V H! 👋</span>
+/*          message = `<span class="paragraph">Hello, I’m Shashank V H.👋</span>
           <span class="paragraph">I’m a final year Information Science Engineering student with a deep passion for technology and problem-solving.</span><span class="paragraph">Whether it's creating user-friendly websites, developing documentation platforms that simplify complex information,</span><span class="paragraph">or automating daily tasks using my programming skills, I enjoy leveraging technology to innovate and improve efficiency.</span>
           <span class="paragraph">I’m constantly exploring the latest tech trends and working on projects that challenge my abilities, as I believe in continuous learning and growth.</span>
           <span class="paragraph">My enthusiasm extends beyond coding, and I’m always looking for new ideas to explore.</span>
           <span class="paragraph">In my downtime, you might find me brainstorming for fresh ideas, enjoying a cup of tea, or reflecting on the endless possibilities of technology.</span>
           <span class="paragraph">If you’re interested in discussing technology, brainstorming ideas, or even collaborating on a project, feel free to connect.</span> 
-          <span class="paragraph">Let’s create something remarkable together.</span>`;
-        printWithDelay(message);
-        response = whois;
+          <span class="paragraph">Let’s create something remarkable together.</span>`; */
         break;
+
       case "clear":
         output.innerHTML = "";
         return;
@@ -105,7 +110,7 @@ https://asciiart.website/index.php?art=objects/computers
           response = setColorScheme(args[1].toLowerCase());
         } else {
           response =
-            'Usage: color [<span class="command ">green</span>|<span class="command ">electron</span>|<span class="command ">red</span>|<span class="command ">solarized</span>]';
+            'Usage: color [<span class="command ">green</span>|<span class="command ">electron</span>|<span class="command ">red</span>|<span class="command ">solarized</span>]\nEx: <span class="command">color electron</span>';
         }
         lineprint(response, "paragraph", 100);
         return;
@@ -121,11 +126,11 @@ https://asciiart.website/index.php?art=objects/computers
         printWithDelay(message);
         break;
       case "projects":
-        message = `Projects:\n<span class="command ">Django_Documentation_website:</span>\n<span style="color: #f88236;">A comprehensive documentation website for the VTU 6th Semester Fullstack Development Lab programs. This site provides </span>\n<span style="color: #f88236;">detailed guides, video summaries, and downloadable resources for each lab exercise.</span>\n[Live Link]: 👉 <a href='https://ShashankVH.pythonanywhere.com' target='_blank'><u>https://ShashankVH.pythonanywhere.com</u></a>\n-----------------------------------------------------------------------------------------------------------------------------------------\n<span class="command ">Game and Gamers Data storage:</span>\n<span style="color: #f88236;">A C program which has multiple games and demonstrates how the users data gets stored when users play the game</span>\n[Github Link]:👉 <a href='https://github.com/Shashank-V-H/DSA_project_code.git' target='_blank'><u>DSA C program</u></a>\n-----------------------------------------------------------------------------------------------------------------------------------------\n<span class="command">SQL playground:</span>\n<span style="color: #f88236;">A web app for interactive SQL querying with SQLite databases.</span>\n<span style="color: #f88236;">Implemented features for schema viewing, query execution, and solving questions which are relevant to the database selected.</span>\n[Live Link]: 👉 <a href='https://sql-playground-4vog.onrender.com/' target='_blank'><u>SQL Playgound</u></a>\n-----------------------------------------------------------------------------------------------------------------------------------------`;
+        message = `Projects:\n<span class="command">Text-to-Web Generator:</span>\n<span style="color: #f88236;">An AI tool that converts text prompts into responsive web pages using the Llama3 model via Together.ai API. The tool dynamically generates HTML/CSS/JS code from user input.\n[Live Link]: 👉 <a href='https://t2w.pythonanywhere.com/' target='_blank'><u>T2W</u></a>\n-----------------------------------------------------------------------------------------------------------------------------------------\n<span class="command ">Django_Documentation_website:</span>\n<span style="color: #f88236;">A comprehensive documentation website for the VTU 6th Semester Fullstack Development Lab programs. This site provides </span>\n<span style="color: #f88236;">detailed guides, video summaries, and downloadable resources for each lab exercise.</span>\n[Live Link]: 👉 <a href='https://ShashankVH.pythonanywhere.com' target='_blank'><u>https://ShashankVH.pythonanywhere.com</u></a>\n-----------------------------------------------------------------------------------------------------------------------------------------\n<span class="command ">Game and Gamers Data storage:</span>\n<span style="color: #f88236;">A C program which has multiple games and demonstrates how the users data gets stored when users play the game</span>\n[Github Link]:👉 <a href='https://github.com/Shashank-V-H/DSA_project_code.git' target='_blank'><u>DSA C program</u></a>\n-----------------------------------------------------------------------------------------------------------------------------------------\n<span class="command">SQL playground:</span>\n<span style="color: #f88236;">A web app for interactive SQL querying with SQLite databases.</span>\n<span style="color: #f88236;">Implemented features for schema viewing, query execution, and solving questions which are relevant to the database selected.</span>\n[Live Link]: 👉 <a href='https://sql-playground-4vog.onrender.com/' target='_blank'><u>SQL Playgound</u></a>\n-----------------------------------------------------------------------------------------------------------------------------------------`;
         printWithDelay(message);
         break;
       case "social":
-        message = `\n<span class="command ">linkedin</span>\t\t<a style="color: #f88236; "href="https://www.linkedin.com/in/shashank-v-ha13538229/">linkedine/Shashank V H</a>`;
+        message = `\n<span class="command ">linkedin</span>\t\t<a style="color: #f88236; "href="https://www.linkedin.com/in/shashank-v-h/">linkedine/Shashank V H</a>`;
         printWithDelay(message);
         break;
       case "email":
@@ -154,7 +159,7 @@ https://asciiart.website/index.php?art=objects/computers
         response = `💩 remeber to flush with <span class="command";>clear</span> command`;
         break;
       default:
-        response = `Command not found: ${cmd}\n-> try <span class=command>help</span>\n`;
+        response = `\nCommand not found: ${cmd}\n\n-> try <span class=command>help</span>\n\n`;
     }
 
     return response;
