@@ -91,6 +91,14 @@ https://asciiart.website/index.php?art=objects/computers
           <span class="paragraph">Hacker, builder, and problem solver.</span>
           <span class="paragraph">Currently accepting job offers & coffee/Tea invitations. ☕😄</span>`
         printWithDelay(message);
+
+        // also you can use this 
+        // visitor@SVH's_website.com:~$ whois
+        // Hello, I’m Shashank V H.👋
+        //Classified. But if you have an interesting project, let's talk. 🤖
+
+
+
         // response = whois;
         // message = `<span class="paragraph">Hey, I'm Shashank V H! 👋</span>
 /*          message = `<span class="paragraph">Hello, I’m Shashank V H.👋</span>
